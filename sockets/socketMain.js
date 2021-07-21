@@ -108,11 +108,21 @@ io.sockets.on("connect", (socket) => {
     playerDeath
       .then((data) => {
         io.sockets.emit("updateLeaderboard", getLeaderboard());
+        io.sockets.emit("playerDeath", data);
       })
       .catch(() => {});
   });
 
-  socket.on("disconnect", (data) => {});
+  socket.on("disconnect", (data) => {
+    if (player.playerData) {
+      players.forEach((curPlayer, index) => {
+        if (curPlayer.uid === player.playerData.uid) {
+          players.splice(index, 1);
+          io.sockets.emit("updateLeaderboard", getLeaderboard());
+        }
+      });
+    }
+  });
 });
 
 function getLeaderboard() {
