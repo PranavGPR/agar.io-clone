@@ -27,3 +27,14 @@ socket.on("tickTock", (data) => {
   player.locX = data.playerX;
   player.locY = data.playerY;
 });
+
+socket.on("updateLeaderboard", (data) => {
+  document.querySelector(".leader-board").innerHTML = "";
+  document.querySelector(".player-score").innerHTML = "";
+  data.forEach((curPlayer) => {
+    document.querySelector(
+      ".leader-board"
+    ).innerHTML += `<li class="leaderboard-player">${curPlayer.name} - ${curPlayer.score}</li>`;
+    document.querySelector(".player-score").innerHTML = curPlayer.score;
+  });
+});

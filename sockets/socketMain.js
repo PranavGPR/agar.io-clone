@@ -14,12 +14,12 @@ const PlayerConfig = require("./classes/PlayerConfig");
 let orbs = [];
 let players = [];
 let settings = {
-  defaultOrbs: 5000,
+  defaultOrbs: 50,
   defaultSpeed: 6,
   defaultSize: 6,
   defaultZoom: 1.5,
-  worldWidth: 5000,
-  worldHeight: 5000,
+  worldWidth: 500,
+  worldHeight: 500,
 };
 
 initGame();
@@ -80,6 +80,7 @@ io.sockets.on("connect", (socket) => {
       player.playerData.locY -= speed * yV;
     }
 
+    // ORB COLLISION
     let capturedOrb = checkForOrbCollisions(
       player.playerData,
       player.playerConfig,
@@ -93,9 +94,11 @@ io.sockets.on("connect", (socket) => {
           newOrb: orbs[data],
         };
         io.sockets.emit("orbSwitch", orbData);
+        io.sockets.emit("updateLeaderboard", getLeaderboard());
       })
       .catch(() => {});
 
+    // PLAYER COLLISION
     let playerDeath = checkForPlayerCollisions(
       player.playerData,
       player.playerConfig,
@@ -104,11 +107,24 @@ io.sockets.on("connect", (socket) => {
     );
     playerDeath
       .then((data) => {
-        console.log(data);
+        io.sockets.emit("updateLeaderboard", getLeaderboard());
       })
       .catch(() => {});
   });
 });
+
+function getLeaderboard() {
+  players.sort((a, b) => {
+    return b.score - a.score;
+  });
+  let leaderboard = players.map((curPlayer) => {
+    return {
+      name: curPlayer.name,
+      score: curPlayer.score,
+    };
+  });
+  return leaderboard;
+}
 
 function initGame() {
   for (i = 0; i < settings.defaultOrbs; i++) {
