@@ -111,6 +111,8 @@ io.sockets.on("connect", (socket) => {
       })
       .catch(() => {});
   });
+
+  socket.on("disconnect", (data) => {});
 });
 
 function getLeaderboard() {
