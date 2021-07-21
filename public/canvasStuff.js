@@ -1,7 +1,3 @@
-function init() {
-  draw();
-}
-
 player.locX = Math.floor(500 * Math.random() + 100);
 player.locY = Math.floor(500 * Math.random() + 100);
 

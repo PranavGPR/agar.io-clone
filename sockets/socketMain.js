@@ -21,14 +21,16 @@ initGame();
 io.sockets.on("connect", (socket) => {
   // works when a player is connected
 
-  let playerConfig = new PlayerConfig(settings);
+  socket.on("init", (data) => {
+    let playerConfig = new PlayerConfig(settings);
 
-  let playerData = new PlayerData(null, settings);
+    let playerData = new PlayerData(data.playerName, settings);
 
-  let player = new Player(socket.id, playerConfig, playerData);
+    let player = new Player(socket.id, playerConfig, playerData);
 
-  socket.emit("init", {
-    orbs,
+    socket.emit("initReturn", {
+      orbs,
+    });
   });
 });
 
