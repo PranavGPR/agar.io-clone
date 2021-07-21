@@ -17,6 +17,13 @@ socket.on("initReturn", (data) => {
 
 socket.on("tock", (data) => {
   players = data.players;
+});
+
+socket.on("orbSwitch", (data) => {
+  orbs.splice(data.orbIndex, 1, data.newOrb);
+});
+
+socket.on("tickTock", (data) => {
   player.locX = data.playerX;
   player.locY = data.playerY;
 });
